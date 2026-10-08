@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SCAMPER 创新思维工具</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<div id="app">
+
+  <!-- ── 输入题目 ── -->
+  <div id="screen-input" class="screen active">
+    <div class="header">
+      <h1>SCAMPER</h1>
+      <p class="subtitle">AI 辅助创新思维工具</p>
+    </div>
+    <div class="card">
+      <p style="margin-bottom:14px;font-weight:600;">输入你的创新题目</p>
+      <textarea id="topic-input" placeholder="例如：改进一款学生用的水杯、设计一个新型书包…"></textarea>
+      <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap;">
+        <button class="btn btn-primary" onclick="startSession()">开始思考 →</button>
+      </div>
+    </div>
+    <div class="card" style="background:#faf9ff;box-shadow:none;border:1px solid #e8e4ff;">
+      <p style="font-size:.88rem;color:#666;line-height:1.8;">
+        <strong>使用流程：</strong>输入题目 → AI 生成 7 道启发问题 → 逐一作答（可跳过）→ AI 综合输出创意方案
+      </p>
+    </div>
+  </div>
+
+  <!-- ── 加载中 ── -->
+  <div id="screen-loading" class="screen">
+    <div class="loading">
+      <div class="spinner"></div>
+      <span id="loading-msg">加载中…</span>
+    </div>
+  </div>
+
+  <!-- ── 问答 ── -->
+  <div id="screen-questions" class="screen">
+    <div class="header">
+      <h1>SCAMPER</h1>
+      <p class="subtitle" id="questions-topic" style="font-weight:600;color:#4a3fbf;"></p>
+    </div>
+
+    <div class="progress-wrap">
+      <div class="progress-label">
+        <span>答题进度</span>
+        <span id="progress-label">0 / 7</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+    </div>
+
+    <div id="nav-dots" class="nav-dots"></div>
+
+    <div class="card">
+      <div class="question-header">
+        <div class="letter-badge" id="q-letter">S</div>
+        <div class="question-meta">
+          <div class="letter-name" id="q-name"></div>
+          <div class="letter-desc" id="q-desc"></div>
+        </div>
+      </div>
+
+      <div class="question-text" id="q-text"></div>
+
+      <!-- 选择题选项 -->
+      <div id="choices-wrap" class="choices" style="display:none;"></div>
+
+      <!-- 开放题输入 -->
+      <div id="open-wrap" style="display:none;">
+        <textarea class="answer-area" id="answer-area" placeholder="在这里输入你的想法…"></textarea>
+      </div>
+
+      <!-- 提示框 -->
+      <div class="hint-box" id="hint-box"></div>
+
+      <!-- 操作按钮 -->
+      <div class="action-row">
+        <button class="btn btn-primary" onclick="nextQuestion()">下一题 →</button>
+        <button class="btn btn-secondary" id="hint-btn" onclick="getHint()">💡 获取提示</button>
+        <button class="btn btn-ghost" onclick="skipQuestion()">跳过</button>
+        <button class="btn btn-danger" onclick="restart()" style="margin-left:auto;">重新开始</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 汇总方案 ── -->
+  <div id="screen-summary" class="screen">
+    <div class="header">
+      <h1>创意方案</h1>
+      <p class="subtitle" id="summary-topic"></p>
+    </div>
+    <p class="summary-intro">基于你的 SCAMPER 思考，AI 为你生成了以下创意备选方案：</p>
+    <div id="ideas-container"></div>
+    <div style="text-align:center;margin-top:16px;">
+      <button class="btn btn-ghost" onclick="restart()">重新开始</button>
+    </div>
+  </div>
+
+</div>
+
+<div id="save-indicator" class="save-indicator">已自动保存</div>
+
+<script src="config.js"></script>
+<script src="app.js"></script>
+<script>
+  // 同步题目标题到问答页
+  const _origRenderQ = renderQuestion;
+  renderQuestion = function(index) {
+    document.getElementById("questions-topic").textContent = state.topic;
+    _origRenderQ(index);
+  };
+</script>
+</body>
+</html>
